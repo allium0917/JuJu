@@ -40,7 +40,6 @@ export default function App() {
     };
 
     const handleNavigate = (page) => {
-        // 개인 페이지는 로그인이 필요함
         if (page === 'mypage' && !user) {
             alert('로그인이 필요합니다.');
             setCurrentPage('login');
