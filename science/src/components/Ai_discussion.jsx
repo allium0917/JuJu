@@ -136,7 +136,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
 3. 명확하고 이해하기 쉽게 설명하세요.
 4. 필요하면 예시를 들어 설명하세요.
 5. 과학적으로 정확한 정보를 제공하세요.
-6. 한국어로 답변하세요.`;
+6. 한국어로 답변하세요.(마크다운 형식으로)`;
 
             const aiResponse = await callAI(question, systemPrompt);
 
@@ -185,7 +185,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
 4. 상대방의 의견에 동의하거나 반박하는 식으로 대화를 이어가세요.
 5. "그 점에 대해서는 이렇게 생각합니다", "흥미로운 질문이네요", "그 부분에 대해 좀 더 깊이 생각해볼까요?" 같은 표현을 사용하세요.
 6. 먼저 주제에 관해 간단히 소개하고, 질문에 대해 답변하세요.
-7. 한국어로 답변하세요.`;
+7. 한국어로 답변하세요.(마크다운 형식으로)`;
 
             const aiResponse = await callAI(question, systemPrompt);
 

@@ -40,7 +40,7 @@ export default function App() {
     };
 
     const handleNavigate = (page) => {
-        if (page === 'mypage' && !user) {
+        if ((page === 'mypage' || page === 'ai') && !user) {
             alert('로그인이 필요합니다.');
             setCurrentPage('login');
             return;
