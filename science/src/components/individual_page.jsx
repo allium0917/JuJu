@@ -128,7 +128,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                     setSelectedItem(null);
                                 }}
                             >
-                                ❓ 질문 내역
+                                질문 내역
                                 <span className="count-badge">{questions.length}</span>
                             </button>
                             <button
@@ -138,7 +138,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                     setSelectedItem(null);
                                 }}
                             >
-                                💬 토론 내역
+                                토론 내역
                                 <span className="count-badge">{discussions.length}</span>
                             </button>
                         </div>

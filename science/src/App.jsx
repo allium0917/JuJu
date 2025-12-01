@@ -38,7 +38,6 @@ export default function App() {
         sessionStorage.removeItem('user');
         setCurrentPage('main');
     };
-
     const handleNavigate = (page) => {
         if ((page === 'mypage' || page === 'ai') && !user) {
             alert('로그인이 필요합니다.');

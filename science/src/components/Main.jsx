@@ -409,7 +409,7 @@ const Main = ({ user, onNavigate, onLogout }) => {
             <div className="nav-tabs">
                 <div className="active" style={{ fontWeight: 'bold', textDecoration: 'underline' }}>메인 페이지</div>
                 <div className="active" onClick={() => onNavigate('ai')}>AI와 토론</div>
-                <div className="active" onClick={() => onNavigate('individual_page')}>개인 페이지</div>
+                <div className="active" onClick={() => onNavigate('mypage')}>개인 페이지</div>
             </div>
 
             <main>

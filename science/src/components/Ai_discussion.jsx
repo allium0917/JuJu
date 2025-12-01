@@ -325,17 +325,17 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                             </>
                         ) : (
                             <>
-                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('login'); }}>로그인</a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('login'); }}>SIGN IN</a>
                                 <span>|</span>
-                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('logup'); }}>회원가입</a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('logup'); }}>SIGN UP</a>
                             </>
                         )}
                     </div>
                 </header>
 
                 <nav className="nav-tabs">
-                    <div className="active" onClick={() => onNavigate('main')}>메인</div>
-                    <div className="active" style={{ fontWeight: 'bold', textDecoration: 'underline' }}>AI 토론</div>
+                    <div className="active" onClick={() => onNavigate('main')}>메인 페이지</div>
+                    <div className="active" style={{ fontWeight: 'bold', textDecoration: 'underline' }}>AI와 토론</div>
                     <div className="active" onClick={() => onNavigate('mypage')}>개인 페이지</div>
                 </nav>
 
@@ -390,17 +390,17 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                             </>
                         ) : (
                             <>
-                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('login'); }}>로그인</a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('login'); }}>SIGN IN</a>
                                 <span>|</span>
-                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('logup'); }}>회원가입</a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('logup'); }}>SIGN UP</a>
                             </>
                         )}
                     </div>
                 </header>
 
                 <nav className="nav-tabs">
-                    <div className="active" onClick={() => onNavigate('main')}>메인</div>
-                    <div className="active" style={{ fontWeight: 'bold', textDecoration: 'underline' }}>AI 토론</div>
+                    <div className="active" onClick={() => onNavigate('main')}>메인 페이지</div>
+                    <div className="active" style={{ fontWeight: 'bold', textDecoration: 'underline' }}>AI와 토론</div>
                     <div className="active" onClick={() => onNavigate('mypage')}>개인 페이지</div>
                 </nav>
 
@@ -478,17 +478,17 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                             </>
                         ) : (
                             <>
-                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('login'); }}>로그인</a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('login'); }}>SIGN IN</a>
                                 <span>|</span>
-                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('logup'); }}>회원가입</a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('logup'); }}>SIGN UP</a>
                             </>
                         )}
                     </div>
                 </header>
 
                 <nav className="nav-tabs">
-                    <div className="active" onClick={() => onNavigate('main')}>메인</div>
-                    <div className="active" style={{ fontWeight: 'bold', textDecoration: 'underline' }}>AI 토론</div>
+                    <div className="active" onClick={() => onNavigate('main')}>메인 페이지</div>
+                    <div className="active" style={{ fontWeight: 'bold', textDecoration: 'underline' }}>AI와 토론</div>
                     <div className="active" onClick={() => onNavigate('mypage')}>개인 페이지</div>
                 </nav>
 
@@ -578,17 +578,17 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                         </>
                     ) : (
                         <>
-                            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('login'); }}>로그인</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('login'); }}>SIGN IN</a>
                             <span>|</span>
-                            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('logup'); }}>회원가입</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('logup'); }}>SIGN UP</a>
                         </>
                     )}
                 </div>
             </header>
 
             <nav className="nav-tabs">
-                <div className="active" onClick={() => onNavigate('main')}>메인</div>
-                <div className="active" style={{ fontWeight: 'bold', textDecoration: 'underline' }}>AI 토론</div>
+                <div className="active" onClick={() => onNavigate('main')}>메인 페이지</div>
+                <div className="active" style={{ fontWeight: 'bold', textDecoration: 'underline' }}>AI와 토론</div>
                 <div className="active" onClick={() => onNavigate('mypage')}>개인 페이지</div>
             </nav>
 
