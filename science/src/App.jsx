@@ -39,11 +39,11 @@ export default function App() {
         setCurrentPage('main');
     };
     const handleNavigate = (page) => {
-        if ((page === 'mypage' || page === 'ai') && !user) {
-            alert('로그인이 필요합니다.');
-            setCurrentPage('login');
-            return;
-        }
+        // if ((page === 'mypage' || page === 'ai') && !user) {
+        //     alert('로그인이 필요합니다.');
+        //     setCurrentPage('login');
+        //     return;
+        // }
         setCurrentPage(page);
     };
 

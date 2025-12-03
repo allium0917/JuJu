@@ -266,23 +266,48 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
         }
 
         try {
+            setIsLoading(true);
+            const conversationText = messages.map(msg =>
+                `${msg.role === 'user' ? '사용자' : 'AI'}: ${msg.content}`
+            ).join('\n\n');
+
+            const summaryPrompt = mode === 'question'
+                ? `다음은 주기율표에 대한 질문과 답변입니다. 이 대화의 핵심 내용을 3-5문장으로 요약해주세요.\n\n${conversationText}`
+                : `다음은 "${currentTopic}"에 대한 토론 내용입니다. 이 토론의 주요 논점과 결론을 3-5문장으로 요약해주세요.\n\n${conversationText}`;
+
+            const aiSummary = await callAI(summaryPrompt, '당신은 대화 내용을 명확하고 간결하게 요약하는 AI입니다. 한국어로 답변하세요.');
+
             const data = {
                 type: mode,
                 topic: currentTopic,
                 question: currentQuestion,
-                messages: messages,
-                userId: user.id,
-                createdAt: new Date().toISOString()
+                user_input: JSON.stringify(messages),
+                ai_response: aiSummary,
+                uid: user.id
             };
 
-            const savedItems = JSON.parse(localStorage.getItem(`${mode}s`) || '[]');
-            savedItems.push(data);
-            localStorage.setItem(`${mode}s`, JSON.stringify(savedItems));
+            const response = await fetch('http://localhost:3000/api/AITalk/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
 
-            alert(mode === 'question' ? '질문이 저장되었습니다!' : '토론이 저장되었습니다!');
+            if (!response.ok) {
+                throw new Error('서버 저장 실패');
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(mode === 'question' ? '질문이 저장되었습니다!' : '토론이 저장되었습니다!');
+            }
         } catch (error) {
             console.error('Error saving:', error);
             alert('저장 중 오류가 발생했습니다.');
+        } finally {
+            setIsLoading(false);
         }
     };
 

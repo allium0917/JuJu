@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const Individual_page = ({ user, onNavigate, onLogout }) => {
-    const [activeTab, setActiveTab] = useState('questions'); // 'questions' or 'discussions'
+    const [activeTab, setActiveTab] = useState('questions');
     const [questions, setQuestions] = useState([]);
     const [discussions, setDiscussions] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -15,48 +15,44 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
         fetchData();
     }, [user]);
 
-    const fetchData = () => {
+    const fetchData = async () => {
         try {
             setLoading(true);
 
-            // localStorage에서 질문 데이터 가져오기
-            const savedQuestions = JSON.parse(localStorage.getItem('questions') || '[]');
-            const userQuestions = savedQuestions.filter(q => q.userId === user.id);
-            setQuestions(userQuestions);
+            const questionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.id}&type=question`);
+            const questionsData = await questionsResponse.json();
+            setQuestions(questionsData.data || []);
 
-            // localStorage에서 토론 데이터 가져오기
-            const savedDiscussions = JSON.parse(localStorage.getItem('discussions') || '[]');
-            const userDiscussions = savedDiscussions.filter(d => d.userId === user.id);
-            setDiscussions(userDiscussions);
+            const discussionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.id}&type=discussion`);
+            const discussionsData = await discussionsResponse.json();
+            setDiscussions(discussionsData.data || []);
+
         } catch (err) {
             console.error('데이터 로딩 에러:', err);
+            alert('데이터를 불러오는 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDelete = (id, type) => {
-        if (!window.confirm(`이 ${type === 'questions' ? '질문' : '토론'} 내역을 삭제하시겠습니까?`)) {
+    const handleDelete = async (tid, type) => {
+        if (!window.confirm(`이 ${type === 'question' ? '질문' : '토론'} 내역을 삭제하시겠습니까?`)) {
             return;
         }
 
         try {
-            const storageKey = type;
-            const savedItems = JSON.parse(localStorage.getItem(storageKey) || '[]');
-            const updatedItems = savedItems.filter((item, index) => {
-                // id가 없는 경우 index로 비교
-                if (item.id) {
-                    return item.id !== id;
-                }
-                return index !== id;
+            const response = await fetch(`http://localhost:3000/api/AITalk/${tid}`, {
+                method: 'DELETE'
             });
 
-            localStorage.setItem(storageKey, JSON.stringify(updatedItems));
+            if (!response.ok) {
+                throw new Error('삭제 실패');
+            }
 
-            alert(`${type === 'questions' ? '질문' : '토론'} 내역이 삭제되었습니다.`);
+            alert(`${type === 'question' ? '질문' : '토론'} 내역이 삭제되었습니다.`);
             fetchData();
 
-            if (selectedItem && (selectedItem.id === id || selectedItem.index === id)) {
+            if (selectedItem && selectedItem.tid === tid) {
                 setSelectedItem(null);
             }
         } catch (err) {
@@ -166,11 +162,11 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                     ) : (
                         <div className="items-container">
                             <div className="items-list">
-                                {currentData.map((item, index) => (
+                                {currentData.map((item) => (
                                     <div
-                                        key={item.id || index}
-                                        className={`item-card ${selectedItem?.id === item.id || selectedItem?.index === index ? 'selected' : ''}`}
-                                        onClick={() => setSelectedItem({ ...item, id: item.id || index, index })}
+                                        key={item.tid}
+                                        className={`item-card ${selectedItem?.tid === item.tid ? 'selected' : ''}`}
+                                        onClick={() => setSelectedItem(item)}
                                     >
                                         <div className="item-header">
                                             <h4 className="item-topic">{item.topic}</h4>
@@ -178,7 +174,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                                 className="delete-btn"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleDelete(item.id || index, activeTab);
+                                                    handleDelete(item.tid, item.type);
                                                 }}
                                             >
                                                 ×
@@ -186,11 +182,9 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                         </div>
                                         <p className="item-question">{item.question}</p>
                                         <div className="item-meta">
-                                            <span className="message-count">
-                                                💬 {item.messages?.length || 0}개의 메시지
-                                            </span>
+                                            <span className="summary-badge">📝 요약</span>
                                             <span className="item-date">
-                                                {formatDate(item.createdAt)}
+                                                {formatDate(item.created_at)}
                                             </span>
                                         </div>
                                     </div>
@@ -202,7 +196,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                     <div className="detail-header">
                                         <div>
                                             <div className="detail-badge">
-                                                {activeTab === 'questions' ? '❓ 질문' : '💬 토론'}
+                                                {activeTab === 'questions' ? '질문' : '토론'}
                                             </div>
                                             <h3>{selectedItem.topic}</h3>
                                             <p className="detail-question">{selectedItem.question}</p>
@@ -214,17 +208,39 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                             ×
                                         </button>
                                     </div>
-                                    <div className="messages-container">
-                                        {selectedItem.messages?.map((message, idx) => (
-                                            <div
-                                                key={idx}
-                                                className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
-                                            >
-                                                <div className="message-bubble">
-                                                    {message.content}
-                                                </div>
-                                            </div>
-                                        ))}
+
+                                    <div className="summary-section">
+                                        <h4 className="summary-title">AI 요약</h4>
+                                        <div className="summary-content">
+                                            {selectedItem.ai_response}
+                                        </div>
+                                    </div>
+
+                                    <div className="messages-section">
+                                        <h4 className="messages-title">전체 대화 내역</h4>
+                                        <div className="messages-container">
+                                            {(() => {
+                                                try {
+                                                    const messages = typeof selectedItem.user_input === 'string'
+                                                        ? JSON.parse(selectedItem.user_input)
+                                                        : selectedItem.user_input;
+
+                                                    return messages?.map((message, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
+                                                        >
+                                                            <div className="message-bubble">
+                                                                {message.content}
+                                                            </div>
+                                                        </div>
+                                                    ));
+                                                } catch (err) {
+                                                    console.error('메시지 파싱 오류:', err);
+                                                    return <p>메시지를 불러올 수 없습니다.</p>;
+                                                }
+                                            })()}
+                                        </div>
                                     </div>
                                 </div>
                             )}

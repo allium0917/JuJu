@@ -62,7 +62,6 @@ header {
     padding: 40px 20px;
 }
 
-/* 프로필 섹션 */
 .profile-section {
     background: white;
     border-radius: 20px;
@@ -104,7 +103,6 @@ header {
     color: #6b7280;
 }
 
-/* 콘텐츠 섹션 */
 .content-section {
     background: white;
     border-radius: 20px;
@@ -117,7 +115,6 @@ header {
     margin-bottom: 30px;
 }
 
-/* 탭 스타일 */
 .tabs-container {
     display: flex;
     gap: 12px;
@@ -171,7 +168,6 @@ header {
     color: #666;
 }
 
-/* 로딩 및 에러 상태 */
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -196,7 +192,6 @@ header {
     }
 }
 
-/* 빈 상태 */
 .empty-state {
     text-align: center;
     padding: 80px 20px;
@@ -238,7 +233,6 @@ header {
     box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
 }
 
-/* 아이템 컨테이너 */
 .items-container {
     display: grid;
     grid-template-columns: 400px 1fr;
@@ -246,7 +240,6 @@ header {
     min-height: 500px;
 }
 
-/* 아이템 리스트 */
 .items-list {
     display: flex;
     flex-direction: column;
@@ -274,7 +267,6 @@ header {
     background: #94a3b8;
 }
 
-/* 아이템 카드 */
 .item-card {
     background: #f8f9fa;
     border-radius: 12px;
@@ -334,7 +326,6 @@ header {
     gap: 4px;
 }
 
-/* 삭제 버튼 */
 .delete-btn {
     width: 28px;
     height: 28px;
@@ -355,7 +346,6 @@ header {
     background: #cc0000;
 }
 
-/* 상세보기 */
 .item-detail {
     background: #f8f9fa;
     border-radius: 12px;
@@ -474,7 +464,6 @@ header {
     border: 1px solid #e0e0e0;
 }
 
-/* 반응형 디자인 */
 @media (max-width: 1200px) {
     .profile-name {
         font-size: 28px;
@@ -649,4 +638,44 @@ header {
         font-size: 13px;
         padding: 10px 14px;
     }
+}
+
+.summary-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.summary-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.summary-content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    white-space: pre-wrap;
+}
+
+.messages-section {
+    margin-top: 20px;
+}
+
+.messages-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.summary-badge {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
 }
