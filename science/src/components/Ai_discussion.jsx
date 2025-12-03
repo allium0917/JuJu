@@ -15,45 +15,37 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
 
     const exampleQuestions = [
         {
-            topic: "주기율표 구조",
-            question: "주기율표가 18족으로 나뉘는 이유는 무엇인가요?"
+            topic: "주기율표가 18족으로 나뉘는 이유는 무엇인가요?"
         },
         {
-            topic: "원자 번호",
-            question: "원자 번호가 원소의 어떤 특성을 나타내나요?"
+            topic: "원자 번호가 원소의 어떤 특성을 나타내나요?"
         },
         {
-            topic: "전자 배치",
-            question: "같은 족의 원소들은 왜 비슷한 화학적 성질을 가지나요?"
+            topic: "같은 족의 원소들은 왜 비슷한 화학적 성질을 가지나요?"
         },
         {
-            topic: "주기율표 역사",
-            question: "멘델레예프가 주기율표를 만들 때 어떤 규칙을 발견했나요?"
+            topic: "멘델레예프가 주기율표를 만들 때 어떤 규칙을 발견했나요?"
         }
     ];
 
     const exampleDiscussions = [
         {
-            topic: "탄소와 생명",
-            question: "탄소가 다른 원소들보다 생명체 구성에 적합한 이유는 무엇인가요?"
+            topic: "탄소가 다른 원소들보다 생명체 구성에 적합한 이유는 무엇인가요?"
         },
         {
-            topic: "희귀 원소 채굴",
-            question: "리튬, 코발트 같은 희귀 원소 채굴이 환경에 미치는 영향은?"
+            topic: "리튬, 코발트 같은 희귀 원소 채굴이 환경에 미치는 영향은?"
         },
         {
-            topic: "금속과 비금속",
-            question: "금속 원소와 비금속 원소의 근본적인 차이는 무엇인가요?"
+            topic: "금속 원소와 비금속 원소의 근본적인 차이는 무엇인가요?"
         },
         {
-            topic: "방사성 원소",
-            question: "우라늄이나 플루토늄 같은 방사성 원소를 어떻게 안전하게 다뤄야 할까요?"
+            topic: "우라늄이나 플루토늄 같은 방사성 원소를 어떻게 안전하게 다뤄야 할까요?"
         }
     ];
 
     const handleExampleClick = (example) => {
         setTopic(example.topic);
-        setQuestion(example.question);
+        setQuestion(example.topic); // topic과 question 통일
     };
 
     const scrollToBottom = () => {
@@ -63,6 +55,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
     const callAI = async (userQuestion, systemPrompt, conversationHistory = []) => {
         try {
             let fullPrompt = systemPrompt + '\n\n';
@@ -76,7 +69,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
             }
 
             fullPrompt += `사용자 질문: ${userQuestion}`;
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,7 +108,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
             return;
         }
 
-        setCurrentTopic(topic || '주기율표 질문');
+        setCurrentTopic(question); // topic과 question 통일
         setCurrentQuestion(question);
         setIsChatActive(true);
         setIsLoading(true);
@@ -157,19 +150,19 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
     };
 
     const handleStartDiscussion = async () => {
-        if (!topic.trim() || !question.trim()) {
-            alert('주제와 질문을 모두 입력해주세요.');
+        if (!topic.trim()) {
+            alert('토론 주제를 입력해주세요.');
             return;
         }
 
         setCurrentTopic(topic);
-        setCurrentQuestion(question);
+        setCurrentQuestion(topic); // topic과 question 통일
         setIsChatActive(true);
         setIsLoading(true);
 
         const userMessage = {
             role: 'user',
-            content: question
+            content: topic
         };
 
         setMessages([userMessage]);
@@ -187,7 +180,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
 6. 먼저 주제에 관해 간단히 소개하고, 질문에 대해 답변하세요.
 7. 한국어로 답변하세요.(마크다운 형식으로)`;
 
-            const aiResponse = await callAI(question, systemPrompt);
+            const aiResponse = await callAI(topic, systemPrompt);
 
             const aiMessage = {
                 role: 'assistant',
@@ -228,7 +221,6 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
 4. 한국어로 답변하세요.`
                 : `당신은 다양한 주제에 대해 토론할 수 있는 AI 토론 파트너입니다.
 현재 토론 주제: "${currentTopic}"
-초기 질문: "${currentQuestion}"
 
 **중요 규칙:**
 1. 반드시 현재 토론 주제("${currentTopic}")와 관련된 질문에만 답변하세요.
@@ -267,6 +259,8 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
 
         try {
             setIsLoading(true);
+
+            // AI에게 대화 요약 요청
             const conversationText = messages.map(msg =>
                 `${msg.role === 'user' ? '사용자' : 'AI'}: ${msg.content}`
             ).join('\n\n');
@@ -278,10 +272,8 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
             const aiSummary = await callAI(summaryPrompt, '당신은 대화 내용을 명확하고 간결하게 요약하는 AI입니다. 한국어로 답변하세요.');
 
             const data = {
-                type: mode,
-                topic: currentTopic,
-                question: currentQuestion,
-                user_input: JSON.stringify(messages),
+                talk_type: mode === 'question' ? 'question' : 'debate',
+                topic: currentTopic, // topic과 question 통일
                 ai_response: aiSummary,
                 uid: user.id
             };
@@ -453,8 +445,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                                         className="example-card"
                                         onClick={() => handleExampleClick(example)}
                                     >
-                                        <div className="example-topic">{example.topic}</div>
-                                        <div className="example-question">{example.question}</div>
+                                        <div className="example-question">{example.topic}</div>
                                     </div>
                                 ))}
                             </div>
@@ -541,8 +532,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                                         className="example-card"
                                         onClick={() => handleExampleClick(example)}
                                     >
-                                        <div className="example-topic">{example.topic}</div>
-                                        <div className="example-question">{example.question}</div>
+                                        <div className="example-question">{example.topic}</div>
                                     </div>
                                 ))}
                             </div>
@@ -558,19 +548,6 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                                         placeholder="토론 주제를 입력하세요"
                                         value={topic}
                                         onChange={(e) => setTopic(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="input-group">
-                                <label className="input-label">시작 질문</label>
-                                <div className="input-wrapper">
-                                    <input
-                                        type="text"
-                                        className="question-input-field"
-                                        placeholder="토론을 시작할 질문을 입력하세요"
-                                        value={question}
-                                        onChange={(e) => setQuestion(e.target.value)}
                                         onKeyPress={handleKeyPress}
                                     />
                                 </div>
@@ -579,7 +556,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                             <button
                                 className="start-btn"
                                 onClick={handleStartDiscussion}
-                                disabled={!topic.trim() || !question.trim()}
+                                disabled={!topic.trim()}
                             >
                                 토론 시작하기
                             </button>
@@ -623,7 +600,6 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                         <div>
                             <div className="mode-badge">{mode === 'question' ? '질문' : '토론'}</div>
                             <h2 className="current-topic">{currentTopic}</h2>
-                            <p className="topic-subtitle">{currentQuestion}</p>
                         </div>
                         <div className="header-actions">
                             <button className="save-discussion-btn" onClick={handleSave}>
