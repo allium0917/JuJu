@@ -38,14 +38,12 @@ export default function App() {
         sessionStorage.removeItem('user');
         setCurrentPage('main');
     };
-
     const handleNavigate = (page) => {
-        // 개인 페이지는 로그인이 필요함
-        if (page === 'mypage' && !user) {
-            alert('로그인이 필요합니다.');
-            setCurrentPage('login');
-            return;
-        }
+        // if ((page === 'mypage' || page === 'ai') && !user) {
+        //     alert('로그인이 필요합니다.');
+        //     setCurrentPage('login');
+        //     return;
+        // }
         setCurrentPage(page);
     };
 

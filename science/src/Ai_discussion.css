@@ -1,41 +1,3 @@
-.example-card {
-    background: white;
-    border: 2px solid #ddd;
-    border-radius: 12px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.example-card:hover {
-    border-color: #999;
-    background: #f5f5f5;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.question-card {
-    border-color: #c9c9c9;
-}
-
-.question-card:hover {
-    border-color: #777;
-    background: #fafafa;
-}
-
-.example-topic {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-.example-question {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.5;
-}
-
 .ai-discussion-page {
     min-height: 100vh;
     background-color: #e5e5e5;
@@ -129,8 +91,101 @@ header {
     padding: 40px 20px;
 }
 
+.mode-select-container {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.mode-select-title {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+}
+
+.mode-select-subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 50px;
+}
+
+.mode-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.mode-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+.mode-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    border-color: #4A90E2;
+}
+
+.mode-icon {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.mode-title {
+    font-size: 1.8rem;
+    text-align: center;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+}
+
+.mode-description {
+    text-align: center;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    font-size: 1rem;
+}
+
+.mode-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mode-features li {
+    padding: 8px 0;
+    color: #4A90E2;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
 .topic-input-container {
     background-color: transparent;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px 12px;
+    margin-bottom: 20px;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: #4A90E2;
 }
 
 .topic-heading {
@@ -174,7 +229,6 @@ header {
     color: #666;
 }
 
-/* 예시 주제 섹션 */
 .examples-section {
     max-width: 1200px;
     margin: 0 auto 50px;
@@ -223,7 +277,6 @@ header {
     line-height: 1.5;
 }
 
-/* 주제와 질문 입력 영역 */
 .topic-input-area {
     max-width: 1200px;
     margin: 0 auto;
@@ -258,66 +311,31 @@ header {
     box-sizing: border-box;
 }
 
-.question-input-field {
-    padding-right: 140px;
-}
-
 .topic-input-field:focus,
 .question-input-field:focus {
     border-color: #666;
 }
 
-.input-actions {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    gap: 8px;
-}
-
-.action-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.reset-btn {
-    background-color: #e5e5e5;
-    color: #666;
-}
-
-.reset-btn:hover {
-    background-color: #d0d0d0;
-}
-
-.refresh-btn {
-    background-color: #e5e5e5;
-    color: #666;
-}
-
-.refresh-btn:hover {
-    background-color: #d0d0d0;
-}
-
-.submit-btn {
-    background-color: #000;
+.start-btn {
+    width: 100%;
+    padding: 16px;
+    background: #4A90E2;
     color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.2s;
 }
 
-.submit-btn:hover:not(:disabled) {
-    background-color: #333;
+.start-btn:hover:not(:disabled) {
+    background: #357ABD;
 }
 
-.submit-btn:disabled {
-    background-color: #999;
+.start-btn:disabled {
+    background: #ccc;
     cursor: not-allowed;
 }
 
@@ -342,6 +360,17 @@ header {
     align-items: center;
 }
 
+.mode-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #f0f7ff;
+    color: #4A90E2;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
 .current-topic {
     font-size: 20px;
     font-weight: bold;
@@ -362,7 +391,7 @@ header {
 
 .save-discussion-btn {
     padding: 8px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: black;
     color: white;
     border: none;
     border-radius: 20px;
@@ -495,7 +524,38 @@ header {
     cursor: not-allowed;
 }
 
-/* 반응형 디자인 */
+.input-actions {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.submit-btn {
+    background-color: #000;
+    color: white;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background-color: #333;
+}
+
+.submit-btn:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
 @media (max-width: 1024px) {
     .logo {
         font-size: 24px;
@@ -504,6 +564,18 @@ header {
     .nav-tabs div {
         margin: 0 20px;
         font-size: 15px;
+    }
+
+    .mode-select-title {
+        font-size: 2rem;
+    }
+
+    .mode-cards {
+        gap: 20px;
+    }
+
+    .mode-card {
+        padding: 30px;
     }
 
     .topic-heading {
@@ -526,10 +598,6 @@ header {
         padding: 16px 22px;
     }
 
-    .question-input-field {
-        padding-right: 130px;
-    }
-
     .current-topic {
         font-size: 18px;
     }
@@ -548,9 +616,8 @@ header {
         font-size: 20px;
     }
 
-    .search-box input {
-        width: 180px;
-        font-size: 13px;
+    .search-box {
+        display: none;
     }
 
     .login-join {
@@ -565,6 +632,41 @@ header {
 
     .discussion-main {
         padding: 30px 15px;
+    }
+
+    .mode-select-container {
+        margin: 40px auto;
+        padding: 0 15px;
+    }
+
+    .mode-select-title {
+        font-size: 1.8rem;
+    }
+
+    .mode-select-subtitle {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    .mode-cards {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .mode-card {
+        padding: 30px 20px;
+    }
+
+    .mode-icon {
+        font-size: 3rem;
+    }
+
+    .mode-title {
+        font-size: 1.5rem;
+    }
+
+    .mode-description {
+        font-size: 0.9rem;
     }
 
     .chat-preview-area {
@@ -623,14 +725,9 @@ header {
         border-radius: 40px;
     }
 
-    .question-input-field {
-        padding-right: 120px;
-    }
-
-    .action-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 16px;
+    .start-btn {
+        font-size: 1rem;
+        padding: 14px;
     }
 
     .chat-active-container {
@@ -678,8 +775,15 @@ header {
     }
 
     .chat-input-field {
-        padding: 12px 120px 12px 16px;
+        padding: 12px 16px;
         font-size: 14px;
+    }
+
+    .input-actions {
+        position: static;
+        transform: none;
+        margin-top: 10px;
+        justify-content: flex-end;
     }
 }
 
@@ -688,13 +792,37 @@ header {
         font-size: 18px;
     }
 
-    .search-box {
-        display: none;
-    }
-
     .nav-tabs div {
         margin: 0 10px;
         font-size: 13px;
+    }
+
+    .mode-select-title {
+        font-size: 1.5rem;
+    }
+
+    .mode-select-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .mode-card {
+        padding: 25px 15px;
+    }
+
+    .mode-icon {
+        font-size: 2.5rem;
+    }
+
+    .mode-title {
+        font-size: 1.3rem;
+    }
+
+    .mode-description {
+        font-size: 0.85rem;
+    }
+
+    .mode-features li {
+        font-size: 0.85rem;
     }
 
     .topic-heading {
@@ -741,14 +869,9 @@ header {
         padding: 12px 16px;
     }
 
-    .question-input-field {
-        padding-right: 110px;
-    }
-
-    .action-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 15px;
+    .start-btn {
+        font-size: 0.95rem;
+        padding: 12px;
     }
 
     .current-topic {

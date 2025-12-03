@@ -1,75 +1,62 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = 'http://localhost:3000/api';
-
 const Individual_page = ({ user, onNavigate, onLogout }) => {
+    const [activeTab, setActiveTab] = useState('questions');
+    const [questions, setQuestions] = useState([]);
     const [discussions, setDiscussions] = useState([]);
-    const [selectedDiscussion, setSelectedDiscussion] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
 
     useEffect(() => {
         if (!user) {
             onNavigate('login');
             return;
         }
-        fetchDiscussions();
+        fetchData();
     }, [user]);
 
-    const fetchDiscussions = async () => {
+    const fetchData = async () => {
         try {
             setLoading(true);
-            const token = sessionStorage.getItem('token');
 
-            const response = await fetch(`${API_URL}/discussions`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const questionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.id}&type=question`);
+            const questionsData = await questionsResponse.json();
+            setQuestions(questionsData.data || []);
 
-            const data = await response.json();
+            const discussionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.id}&type=discussion`);
+            const discussionsData = await discussionsResponse.json();
+            setDiscussions(discussionsData.data || []);
 
-            if (data.success) {
-                setDiscussions(data.discussions);
-            } else {
-                setError(data.message);
-            }
         } catch (err) {
-            setError('토론 내역을 불러오는 중 오류가 발생했습니다.');
-            console.error('토론 내역 조회 에러:', err);
+            console.error('데이터 로딩 에러:', err);
+            alert('데이터를 불러오는 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDeleteDiscussion = async (discussionId) => {
-        if (!window.confirm('이 토론 내역을 삭제하시겠습니까?')) {
+    const handleDelete = async (tid, type) => {
+        if (!window.confirm(`이 ${type === 'question' ? '질문' : '토론'} 내역을 삭제하시겠습니까?`)) {
             return;
         }
 
         try {
-            const token = sessionStorage.getItem('token');
-
-            const response = await fetch(`${API_URL}/discussions/${discussionId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+            const response = await fetch(`http://localhost:3000/api/AITalk/${tid}`, {
+                method: 'DELETE'
             });
 
-            const data = await response.json();
+            if (!response.ok) {
+                throw new Error('삭제 실패');
+            }
 
-            if (data.success) {
-                alert('토론 내역이 삭제되었습니다.');
-                fetchDiscussions();
-                if (selectedDiscussion && selectedDiscussion.id === discussionId) {
-                    setSelectedDiscussion(null);
-                }
-            } else {
-                alert(data.message);
+            alert(`${type === 'question' ? '질문' : '토론'} 내역이 삭제되었습니다.`);
+            fetchData();
+
+            if (selectedItem && selectedItem.tid === tid) {
+                setSelectedItem(null);
             }
         } catch (err) {
-            alert('토론 내역 삭제 중 오류가 발생했습니다.');
+            alert('삭제 중 오류가 발생했습니다.');
             console.error('삭제 에러:', err);
         }
     };
@@ -84,6 +71,8 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
             minute: '2-digit'
         });
     };
+
+    const currentData = activeTab === 'questions' ? questions : discussions;
 
     if (!user) {
         return null;
@@ -127,88 +116,131 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
 
                 <div className="content-section">
                     <div className="section-header">
-                        <h3 className="section-title">토론 내역</h3>
-                        <p className="section-subtitle">
-                            총 {discussions.length}개의 토론
-                        </p>
+                        <div className="tabs-container">
+                            <button
+                                className={`tab-btn ${activeTab === 'questions' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setActiveTab('questions');
+                                    setSelectedItem(null);
+                                }}
+                            >
+                                질문 내역
+                                <span className="count-badge">{questions.length}</span>
+                            </button>
+                            <button
+                                className={`tab-btn ${activeTab === 'discussions' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setActiveTab('discussions');
+                                    setSelectedItem(null);
+                                }}
+                            >
+                                토론 내역
+                                <span className="count-badge">{discussions.length}</span>
+                            </button>
+                        </div>
                     </div>
 
                     {loading ? (
                         <div className="loading-container">
                             <div className="loading-spinner"></div>
-                            <p>토론 내역을 불러오는 중...</p>
+                            <p>내역을 불러오는 중...</p>
                         </div>
-                    ) : error ? (
-                        <div className="error-container">
-                            <p>{error}</p>
-                        </div>
-                    ) : discussions.length === 0 ? (
+                    ) : currentData.length === 0 ? (
                         <div className="empty-state">
-                            <div className="empty-icon">💬</div>
-                            <h3>아직 토론 내역이 없습니다</h3>
-                            <p>AI와 토론을 시작해보세요!</p>
+                            <div className="empty-icon">
+                                {activeTab === 'questions' ? '❓' : '💬'}
+                            </div>
+                            <h3>아직 {activeTab === 'questions' ? '질문' : '토론'} 내역이 없습니다</h3>
+                            <p>AI와 {activeTab === 'questions' ? '질문을' : '토론을'} 시작해보세요!</p>
                             <button
-                                className="start-discussion-btn"
+                                className="start-btn"
                                 onClick={() => onNavigate('ai')}
                             >
-                                토론 시작하기
+                                {activeTab === 'questions' ? '질문하러 가기' : '토론 시작하기'}
                             </button>
                         </div>
                     ) : (
-                        <div className="discussions-container">
-                            <div className="discussions-list">
-                                {discussions.map((discussion) => (
+                        <div className="items-container">
+                            <div className="items-list">
+                                {currentData.map((item) => (
                                     <div
-                                        key={discussion.id}
-                                        className={`discussion-card ${selectedDiscussion?.id === discussion.id ? 'selected' : ''}`}
-                                        onClick={() => setSelectedDiscussion(discussion)}
+                                        key={item.tid}
+                                        className={`item-card ${selectedItem?.tid === item.tid ? 'selected' : ''}`}
+                                        onClick={() => setSelectedItem(item)}
                                     >
-                                        <div className="discussion-header">
-                                            <h4 className="discussion-topic">{discussion.topic}</h4>
+                                        <div className="item-header">
+                                            <h4 className="item-topic">{item.topic}</h4>
                                             <button
                                                 className="delete-btn"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleDeleteDiscussion(discussion.id);
+                                                    handleDelete(item.tid, item.type);
                                                 }}
                                             >
                                                 ×
                                             </button>
                                         </div>
-                                        <div className="discussion-meta">
-                                            <span className="message-count">
-                                                💬 {discussion.messages.length}개의 메시지
-                                            </span>
-                                            <span className="discussion-date">
-                                                {formatDate(discussion.createdAt)}
+                                        <p className="item-question">{item.question}</p>
+                                        <div className="item-meta">
+                                            <span className="summary-badge">📝 요약</span>
+                                            <span className="item-date">
+                                                {formatDate(item.created_at)}
                                             </span>
                                         </div>
                                     </div>
                                 ))}
                             </div>
 
-                            {selectedDiscussion && (
-                                <div className="discussion-detail">
+                            {selectedItem && (
+                                <div className="item-detail">
                                     <div className="detail-header">
-                                        <h3>{selectedDiscussion.topic}</h3>
+                                        <div>
+                                            <div className="detail-badge">
+                                                {activeTab === 'questions' ? '질문' : '토론'}
+                                            </div>
+                                            <h3>{selectedItem.topic}</h3>
+                                            <p className="detail-question">{selectedItem.question}</p>
+                                        </div>
                                         <button
                                             className="close-detail-btn"
-                                            onClick={() => setSelectedDiscussion(null)}
+                                            onClick={() => setSelectedItem(null)}
                                         >
                                             ×
                                         </button>
                                     </div>
-                                    <div className="messages-container">
-                                        {selectedDiscussion.messages.map((message, idx) => (
-                                            <div
-                                                key={idx}
-                                                className={`message ${message.type === 'user' ? 'user-message' : 'ai-message'}`}
-                                            >
-                                                <div className="message-bubble">
-                                                    {message.text}
-                                                </div>
-                                            </div>
-                                        ))}
+
+                                    <div className="summary-section">
+                                        <h4 className="summary-title">AI 요약</h4>
+                                        <div className="summary-content">
+                                            {selectedItem.ai_response}
+                                        </div>
+                                    </div>
+
+                                    <div className="messages-section">
+                                        <h4 className="messages-title">전체 대화 내역</h4>
+                                        <div className="messages-container">
+                                            {(() => {
+                                                try {
+                                                    const messages = typeof selectedItem.user_input === 'string'
+                                                        ? JSON.parse(selectedItem.user_input)
+                                                        : selectedItem.user_input;
+
+                                                    return messages?.map((message, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
+                                                        >
+                                                            <div className="message-bubble">
+                                                                {message.content}
+                                                            </div>
+                                                        </div>
+                                                    ));
+                                                } catch (err) {
+                                                    console.error('메시지 파싱 오류:', err);
+                                                    return <p>메시지를 불러올 수 없습니다.</p>;
+                                                }
+                                            })()}
+                                        </div>
                                     </div>
                                 </div>
                             )}

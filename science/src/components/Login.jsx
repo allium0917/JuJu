@@ -25,9 +25,7 @@ function SignIn({ onBack, onLogin }) {
       const data = await response.json();
 
       if (data.success) {
-        console.log('로그인 데이터:', data); // 전체 응답 확인
-
-        // user 객체에 name이 없으면 email에서 추출
+        console.log('로그인 데이터:', data);
         const userData = {
           ...data.user,
           name: data.user.name || data.user.username || data.user.email?.split('@')[0] || '사용자'
