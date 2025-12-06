@@ -69,7 +69,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
             }
 
             fullPrompt += `사용자 질문: ${userQuestion}`;
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
