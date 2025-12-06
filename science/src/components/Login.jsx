@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 const API_URL = 'http://localhost:3000/api';
 
 function SignIn({ onBack, onLogin }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [umail, setUmail] = useState('');
+  const [upw, setUpw] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -19,7 +19,7 @@ function SignIn({ onBack, onLogin }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ umail, upw }),
       });
 
       const data = await response.json();
@@ -27,8 +27,9 @@ function SignIn({ onBack, onLogin }) {
       if (data.success) {
         console.log('로그인 데이터:', data);
         const userData = {
-          ...data.user,
-          name: data.user.name || data.user.username || data.user.email?.split('@')[0] || '사용자'
+          uid: data.user.uid,
+          uname: data.user.uname,
+          umail: data.user.umail
         };
 
         alert('로그인 성공!');
@@ -62,8 +63,8 @@ function SignIn({ onBack, onLogin }) {
           <label>이메일</label>
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={umail}
+            onChange={(e) => setUmail(e.target.value)}
             placeholder="example@email.com"
             disabled={loading}
             className="input-field"
@@ -74,8 +75,8 @@ function SignIn({ onBack, onLogin }) {
           <label>비밀번호</label>
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={upw}
+            onChange={(e) => setUpw(e.target.value)}
             placeholder="••••••••"
             disabled={loading}
             className="input-field"
@@ -104,9 +105,9 @@ function SignIn({ onBack, onLogin }) {
 
 function SignUp({ onBack, onLogin }) {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+    uname: '',
+    umail: '',
+    upw: '',
     confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
@@ -119,22 +120,22 @@ function SignUp({ onBack, onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name.trim()) {
+    if (!formData.uname.trim()) {
       setError('이름을 입력해주세요!');
       return;
     }
 
-    if (!formData.email.trim()) {
+    if (!formData.umail.trim()) {
       setError('이메일을 입력해주세요!');
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.upw !== formData.confirmPassword) {
       setError('비밀번호가 일치하지 않습니다!');
       return;
     }
 
-    if (formData.password.length < 6) {
+    if (formData.upw.length < 6) {
       setError('비밀번호는 6자 이상이어야 합니다!');
       return;
     }
@@ -149,21 +150,21 @@ function SignUp({ onBack, onLogin }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password
+          uname: formData.uname,
+          umail: formData.umail,
+          upw: formData.upw
         }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        console.log('회원가입 데이터:', data); // 전체 응답 확인
+        console.log('회원가입 데이터:', data);
 
-        // user 객체에 name이 없으면 입력한 name 사용
         const userData = {
-          ...data.user,
-          name: data.user.name || formData.name
+          uid: data.user.uid,
+          uname: data.user.uname,
+          umail: data.user.umail
         };
 
         alert('회원가입 성공!');
@@ -197,8 +198,8 @@ function SignUp({ onBack, onLogin }) {
           <label>이름</label>
           <input
             type="text"
-            value={formData.name}
-            onChange={(e) => handleChange('name', e.target.value)}
+            value={formData.uname}
+            onChange={(e) => handleChange('uname', e.target.value)}
             placeholder="홍길동"
             disabled={loading}
             className="input-field"
@@ -210,8 +211,8 @@ function SignUp({ onBack, onLogin }) {
           <label>이메일</label>
           <input
             type="email"
-            value={formData.email}
-            onChange={(e) => handleChange('email', e.target.value)}
+            value={formData.umail}
+            onChange={(e) => handleChange('umail', e.target.value)}
             placeholder="example@email.com"
             disabled={loading}
             className="input-field"
@@ -223,8 +224,8 @@ function SignUp({ onBack, onLogin }) {
           <label>비밀번호</label>
           <input
             type="password"
-            value={formData.password}
-            onChange={(e) => handleChange('password', e.target.value)}
+            value={formData.upw}
+            onChange={(e) => handleChange('upw', e.target.value)}
             placeholder="••••••••"
             disabled={loading}
             className="input-field"
