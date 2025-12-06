@@ -16,6 +16,7 @@ app.post("/test/signin", (req, res) => {
 
 // 로그인 라우터
 app.use("/api", authRouter);  // fetch('/api/signin')과 매칭
+app.use('/api/AITalk', AITalkRoutes);
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${port}`);

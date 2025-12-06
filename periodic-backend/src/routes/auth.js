@@ -6,12 +6,12 @@ const router = express.Router();
 
 // ==================== 회원가입 ====================
 router.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { uname, umail, upw } = req.body;
 
   try {
     const exist = await pool.query(
     "SELECT * FROM users WHERE umail = $1",
-    [email]
+    [umail]
     );
 
     if (exist.rows.length > 0) {
@@ -25,7 +25,7 @@ router.post("/signup", async (req, res) => {
     const result = await pool.query(
       `INSERT INTO users (uname, umail, upw)
       VALUES ($1, $2, $3) RETURNING uid, uname, umail`,
-      [name, email, password]
+      [uname, umail, upw]
     );
 
     return res.json({
@@ -41,12 +41,12 @@ router.post("/signup", async (req, res) => {
 
 // ==================== 로그인 ====================
 router.post("/signin", async (req, res) => {
-  const { email, password } = req.body;
+  const { umail, upw } = req.body;
 
   try {
     const result = await pool.query(
       "SELECT uid, uname, umail FROM users WHERE umail = $1 AND upw = $2", 
-      [email, password]
+      [umail, upw]
     );
 
     if (result.rows.length === 0) {

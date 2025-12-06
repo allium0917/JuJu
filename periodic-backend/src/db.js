@@ -9,20 +9,13 @@ const pool = new Pool({
   port: 5432,
 });
 
-
 async function testConnection() {
   try {
     const client = await pool.connect();
     console.log('✅ PostgreSQL 연결 성공');
     client.release();
-
-    const res = await client.query("SELECT version();");
-    console.log(res.rows);
   } catch (err) {
     console.error('❌ PostgreSQL 연결 실패:', err.message);
-  } finally{
-
-    client.release();
   }
 }
 
