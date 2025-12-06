@@ -282,16 +282,15 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                     : `${currentTopic}에 대한 ${mode === 'question' ? '질문' : '토론'}`;
             }
 
-            // DB에 저장 (DB 스키마에 맞게 수정)
+            // DB에 저장 - DB 스키마에 정확히 맞춤
             const data = {
-                talk_type: mode === 'question' ? 'question' : 'debate',
+                uid: user.uid,
                 topic: currentTopic,
-                user_input: currentTopic, // user_input 필드 추가
                 ai_response: aiSummary,
-                uid: user.uid // user.id -> user.uid로 수정
+                talk_type: mode === 'question' ? 'question' : 'debate'
             };
 
-            const response = await fetch('http://localhost:3000/api/AITalk/save', {
+            const response = await fetch('http://localhost:3000/api/aitalk/save', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -300,8 +299,14 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || '서버 저장 실패');
+                let errorMessage = '서버 저장 실패';
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (e) {
+                    errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
             }
 
             const result = await response.json();
@@ -316,7 +321,6 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
             setIsLoading(false);
         }
     };
-
     const handleBack = () => {
         if (isChatActive) {
             setIsChatActive(false);
