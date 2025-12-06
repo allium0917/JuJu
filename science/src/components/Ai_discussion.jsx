@@ -260,22 +260,35 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
         try {
             setIsLoading(true);
 
-            // AI에게 대화 요약 요청
-            const conversationText = messages.map(msg =>
-                `${msg.role === 'user' ? '사용자' : 'AI'}: ${msg.content}`
-            ).join('\n\n');
+            let aiSummary = '';
 
-            const summaryPrompt = mode === 'question'
-                ? `다음은 주기율표에 대한 질문과 답변입니다. 이 대화의 핵심 내용을 3-5문장으로 요약해주세요.\n\n${conversationText}`
-                : `다음은 "${currentTopic}"에 대한 토론 내용입니다. 이 토론의 주요 논점과 결론을 3-5문장으로 요약해주세요.\n\n${conversationText}`;
+            // AI 요약 시도 (실패해도 계속 진행)
+            try {
+                const conversationText = messages.map(msg =>
+                    `${msg.role === 'user' ? '사용자' : 'AI'}: ${msg.content}`
+                ).join('\n\n');
 
-            const aiSummary = await callAI(summaryPrompt, '당신은 대화 내용을 명확하고 간결하게 요약하는 AI입니다. 한국어로 답변하세요.');
+                const summaryPrompt = mode === 'question'
+                    ? `다음은 주기율표에 대한 질문과 답변입니다. 이 대화의 핵심 내용을 3-5문장으로 요약해주세요.\n\n${conversationText}`
+                    : `다음은 "${currentTopic}"에 대한 토론 내용입니다. 이 토론의 주요 논점과 결론을 3-5문장으로 요약해주세요.\n\n${conversationText}`;
 
+                aiSummary = await callAI(summaryPrompt, '당신은 대화 내용을 명확하고 간결하게 요약하는 AI입니다. 한국어로 답변하세요.');
+            } catch (summaryError) {
+                console.warn('AI 요약 실패, 기본 요약 사용:', summaryError);
+                // AI 요약 실패 시 기본 요약 생성
+                const firstMessage = messages.find(msg => msg.role === 'assistant');
+                aiSummary = firstMessage
+                    ? firstMessage.content.substring(0, 200) + '...'
+                    : `${currentTopic}에 대한 ${mode === 'question' ? '질문' : '토론'}`;
+            }
+
+            // DB에 저장 (DB 스키마에 맞게 수정)
             const data = {
                 talk_type: mode === 'question' ? 'question' : 'debate',
-                topic: currentTopic, // topic과 question 통일
+                topic: currentTopic,
+                user_input: currentTopic, // user_input 필드 추가
                 ai_response: aiSummary,
-                uid: user.id
+                uid: user.uid // user.id -> user.uid로 수정
             };
 
             const response = await fetch('http://localhost:3000/api/AITalk/save', {
@@ -287,7 +300,8 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
             });
 
             if (!response.ok) {
-                throw new Error('서버 저장 실패');
+                const errorData = await response.json();
+                throw new Error(errorData.message || '서버 저장 실패');
             }
 
             const result = await response.json();
@@ -297,7 +311,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
             }
         } catch (error) {
             console.error('Error saving:', error);
-            alert('저장 중 오류가 발생했습니다.');
+            alert(`저장 중 오류가 발생했습니다: ${error.message}`);
         } finally {
             setIsLoading(false);
         }
