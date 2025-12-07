@@ -1,6 +1,6 @@
 // src/routes/AITalk.js
 import express from 'express';
-import pool from '../periodic-backend/src/db.js';
+import pool from '../db.js';
 
 const router = express.Router();
 
