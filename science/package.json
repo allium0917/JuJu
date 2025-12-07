@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "cd react && npm install && npm run build",
+    "build": "cd science && npm install && npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
