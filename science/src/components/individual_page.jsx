@@ -23,7 +23,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
             const questionsData = await questionsResponse.json();
             setQuestions(questionsData.data || []);
 
-            const discussionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.id}&type=discussion`);
+            const discussionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.id}&type=debate`);
             const discussionsData = await discussionsResponse.json();
             setDiscussions(discussionsData.data || []);
 
@@ -83,7 +83,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
             <header>
                 <div className="logo">JuJu</div>
                 <div className="login-join">
-                    <span className="status">{user.name}님</span>
+                    <span className="status">{user.uname}님</span>
                     <button onClick={onLogout} style={{
                         border: 'none',
                         background: 'none',
@@ -107,7 +107,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                 <div className="profile-section">
                     <div className="profile-avatar">
                         <div className="avatar-circle">
-                            {user.name.charAt(0).toUpperCase()}
+                            {(user?.name?.charAt(0) || '').toUpperCase()}
                         </div>
                     </div>
                     <h2 className="profile-name">{user.name}</h2>
@@ -174,13 +174,13 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                                 className="delete-btn"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleDelete(item.tid, item.type);
+                                                    handleDelete(item.tid, item.talk_type);
                                                 }}
                                             >
                                                 ×
                                             </button>
                                         </div>
-                                        <p className="item-question">{item.question}</p>
+                                        <p className="item-question">{item.topic}</p>
                                         <div className="item-meta">
                                             <span className="summary-badge">📝 요약</span>
                                             <span className="item-date">
@@ -199,7 +199,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                                 {activeTab === 'questions' ? '질문' : '토론'}
                                             </div>
                                             <h3>{selectedItem.topic}</h3>
-                                            <p className="detail-question">{selectedItem.question}</p>
+                                            <p className="detail-question">{selectedItem.topic}</p>
                                         </div>
                                         <button
                                             className="close-detail-btn"
@@ -217,6 +217,12 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                     </div>
 
                                     <div className="messages-section">
+                                        <h4 className="messages-title">전체 대화 내역</h4>
+                                        <div className="messages-container">
+                                            <p>전체 대화 내역 기능은 아직 지원되지 않습니다.</p>
+                                        </div>
+                                    </div>
+                                    {/* <div className="messages-section">
                                         <h4 className="messages-title">전체 대화 내역</h4>
                                         <div className="messages-container">
                                             {(() => {
@@ -241,7 +247,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                                 }
                                             })()}
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             )}
                         </div>

@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRouter from "./routes/auth.js";
 import pool from "./db.js";
-import AITalkRouter from './routes/AItalk.js';
+import AITalkRouter from './routes/AITalk.js';
 
 const app = express();
 const port = 3000;

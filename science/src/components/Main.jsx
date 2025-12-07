@@ -393,7 +393,7 @@ const Main = ({ user, onNavigate, onLogout }) => {
                     {user ? (
                         <>
                             <span style={{ marginRight: '10px', color: '#3b82f6', fontWeight: '600' }}>
-                                {user.name}님
+                                {user.uname}님
                             </span>
                             <a href="#" onClick={(e) => { e.preventDefault(); onLogout(); }}>로그아웃</a>
                         </>

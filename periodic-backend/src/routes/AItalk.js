@@ -4,6 +4,36 @@ import pool from '../db.js';
 
 const router = express.Router();
 
+// /api/AITalk?uid=6&type=question
+router.get('/', async (req, res) => {
+    try {
+        const { uid, type } = req.query;
+
+        if (!uid || !type) {
+            return res.status(400).json({ success: false, message: 'uid나 type 누락' });
+        }
+
+        const allowedTypes = ['debate', 'question'];
+        if (!allowedTypes.includes(type)) {
+            return res.status(400).json({ success: false, message: '유효하지 않은 type' });
+        }
+
+        const query = `
+            SELECT tid, uid, topic, ai_response, created_at, talk_type
+            FROM ai_talk
+            WHERE uid = $1 AND talk_type = $2
+            ORDER BY created_at DESC
+        `;
+
+        const result = await pool.query(query, [uid, type]);
+
+        res.json({ success: true, data: result.rows });
+    } catch (err) {
+        console.error('❌ DB Select 오류:', err);
+        res.status(500).json({ success: false, message: '서버 오류' });
+    }
+});
+
 router.post('/save', async (req, res) => {
     try {
         const { talk_type, topic, ai_response, uid } = req.body;

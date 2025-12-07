@@ -355,7 +355,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                     <div className="login-join">
                         {user ? (
                             <>
-                                <span className="status">{user.name}님</span>
+                                <span className="status">{user.uname}님</span>
                                 <a href="#" onClick={(e) => { e.preventDefault(); onLogout(); }}>로그아웃</a>
                             </>
                         ) : (
@@ -420,7 +420,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                     <div className="login-join">
                         {user ? (
                             <>
-                                <span className="status">{user.name}님</span>
+                                <span className="status">{user.uname}님</span>
                                 <a href="#" onClick={(e) => { e.preventDefault(); onLogout(); }}>로그아웃</a>
                             </>
                         ) : (
@@ -507,7 +507,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                     <div className="login-join">
                         {user ? (
                             <>
-                                <span className="status">{user.name}님</span>
+                                <span className="status">{user.uname}님</span>
                                 <a href="#" onClick={(e) => { e.preventDefault(); onLogout(); }}>로그아웃</a>
                             </>
                         ) : (
@@ -593,7 +593,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                 <div className="login-join">
                     {user ? (
                         <>
-                            <span className="status">{user.name}님</span>
+                            <span className="status">{user.uname}님</span>
                             <a href="#" onClick={(e) => { e.preventDefault(); onLogout(); }}>로그아웃</a>
                         </>
                     ) : (
