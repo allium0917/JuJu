@@ -19,11 +19,11 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
         try {
             setLoading(true);
 
-            const questionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.id}&type=question`);
+            const questionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.uid}&type=question`);
             const questionsData = await questionsResponse.json();
             setQuestions(questionsData.data || []);
 
-            const discussionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.id}&type=debate`);
+            const discussionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.uid}&type=debate`);
             const discussionsData = await discussionsResponse.json();
             setDiscussions(discussionsData.data || []);
 
@@ -105,13 +105,9 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
 
             <main className="individual-main">
                 <div className="profile-section">
-                    <div className="profile-avatar">
-                        <div className="avatar-circle">
-                            {(user?.name?.charAt(0) || '').toUpperCase()}
-                        </div>
-                    </div>
-                    <h2 className="profile-name">{user.name}</h2>
-                    <p className="profile-email">{user.email}</p>
+
+                    <h2 className="profile-name">{user.uname} 님</h2>
+                    <p className="profile-email">{user.umail}</p>
                 </div>
 
                 <div className="content-section">

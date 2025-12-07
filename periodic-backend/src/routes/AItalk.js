@@ -4,6 +4,34 @@ import pool from '../db.js';
 
 const router = express.Router();
 
+// /api/AITalk/:tid DELETE
+router.delete('/:tid', async (req, res) => {
+    try {
+        const { tid } = req.params;
+
+        if (!tid) {
+            return res.status(400).json({ success: false, message: 'tid 누락' });
+        }
+
+        const query = `
+            DELETE FROM ai_talk
+            WHERE tid = $1
+            RETURNING *;
+        `;
+
+        const result = await pool.query(query, [tid]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ success: false, message: '삭제할 데이터 없음' });
+        }
+
+        res.json({ success: true, message: '삭제 완료', deleted: result.rows[0] });
+    } catch (err) {
+        console.error('❌ DB Delete 오류:', err);
+        res.status(500).json({ success: false, message: '서버 오류' });
+    }
+});
+
 // /api/AITalk?uid=6&type=question
 router.get('/', async (req, res) => {
     try {
