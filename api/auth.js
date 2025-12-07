@@ -1,6 +1,6 @@
 // routes/auth.js
 import express from "express";
-import pool from "../db.js";
+import pool from "../periodic-backend/src/db.js";
 
 const router = express.Router();
 
