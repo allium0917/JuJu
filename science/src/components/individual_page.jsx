@@ -19,11 +19,11 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
         try {
             setLoading(true);
 
-            const questionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.uid}&type=question`);
+            const questionsResponse = await fetch(`https://juju-be.onrender.com/api/AITalk?uid=${user.uid}&type=question`);
             const questionsData = await questionsResponse.json();
             setQuestions(questionsData.data || []);
 
-            const discussionsResponse = await fetch(`http://localhost:3000/api/AITalk?uid=${user.uid}&type=debate`);
+            const discussionsResponse = await fetch(`https://juju-be.onrender.com/api/AITalk?uid=${user.uid}&type=debate`);
             const discussionsData = await discussionsResponse.json();
             setDiscussions(discussionsData.data || []);
 
@@ -41,7 +41,7 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/AITalk/${tid}`, {
+            const response = await fetch(`https://juju-be.onrender.com/api/AITalk/${tid}`, {
                 method: 'DELETE'
             });
 
@@ -218,32 +218,6 @@ const Individual_page = ({ user, onNavigate, onLogout }) => {
                                             <p>전체 대화 내역 기능은 아직 지원되지 않습니다.</p>
                                         </div>
                                     </div>
-                                    {/* <div className="messages-section">
-                                        <h4 className="messages-title">전체 대화 내역</h4>
-                                        <div className="messages-container">
-                                            {(() => {
-                                                try {
-                                                    const messages = typeof selectedItem.user_input === 'string'
-                                                        ? JSON.parse(selectedItem.user_input)
-                                                        : selectedItem.user_input;
-
-                                                    return messages?.map((message, idx) => (
-                                                        <div
-                                                            key={idx}
-                                                            className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
-                                                        >
-                                                            <div className="message-bubble">
-                                                                {message.content}
-                                                            </div>
-                                                        </div>
-                                                    ));
-                                                } catch (err) {
-                                                    console.error('메시지 파싱 오류:', err);
-                                                    return <p>메시지를 불러올 수 없습니다.</p>;
-                                                }
-                                            })()}
-                                        </div>
-                                    </div> */}
                                 </div>
                             )}
                         </div>

@@ -45,7 +45,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
 
     const handleExampleClick = (example) => {
         setTopic(example.topic);
-        setQuestion(example.topic); // topic과 question 통일
+        setQuestion(example.topic);
     };
 
     const scrollToBottom = () => {
@@ -290,7 +290,7 @@ export default function Ai_discussion({ user, onNavigate, onLogout }) {
                 talk_type: mode === 'question' ? 'question' : 'debate'
             };
 
-            const response = await fetch('http://localhost:3000/api/aitalk/save', {
+            const response = await fetch('https://juju-be.onrender.com/api/aitalk/save', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
