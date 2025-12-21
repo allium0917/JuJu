@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const API_URL = 'https://juju-be.onrender.com//api';
+const API_URL = 'https://juju-be.onrender.com/api';
 
 function SignIn({ onBack, onLogin }) {
   const [umail, setUmail] = useState('');
